@@ -733,25 +733,33 @@ class RequestRefundView(View):
             ref_code = form.cleaned_data.get('ref_code')
             message= form.cleaned_data.get('message')
             email =form.cleaned_data.get('email')
-             #edit the order
-            try:
-                order = Order.objects.get(ref_code=ref_code)
-                order.refund_requested=True
-                order.save()
+            email_qs=User.objects.filter(email=email)
+            if email_qs.exists():
+                #edit the order
+                try:
+                    order = Order.objects.get(ref_code=ref_code)
+                    order.refund_requested=True
+                    order.save()
 
-                #store the refund
-                refund= Refund()
-                refund.order = order
-                refund.reason = message
-                refund.email = email
-                refund.save()
+                    #store the refund
+                    refund= Refund()
+                    refund.order = order
+                    refund.reason = message
+                    refund.email = email
+                    refund.save()
 
-                messages.info(self.request,"Your request is really important to us, We will work on it ASAP!")
-                return redirect("core:request-refund")
+                    messages.info(self.request,"Your request is really important to us, We will work on it ASAP!")
+                    msg = EmailMessage('We are working on your request,Please be patient!', 'yander.helpdesk@gmail.com', to=[self.request.user.email])
+                    msg.send()
+                    admin_msg = Email
+                    return redirect("core:request-refund")
 
-            
-            except ObjectDoesNotExist:
-                messages.info(self.request,"This Order Does Not Exist")
+                
+                except ObjectDoesNotExist:
+                    messages.info(self.request,"This Order Does Not Exist")
+                    return redirect("core:request-refund")
+            else:
+                messages.info(self.request,"Please give a registered email.")
                 return redirect("core:request-refund")
 
 

@@ -3,6 +3,12 @@ from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 from .models import Review
 from django.forms import ModelForm
+from django.contrib.auth import get_user_model
+from django.contrib import messages
+
+from validate_email import validate_email
+from django.core.exceptions import ValidationError
+import re
 
 PAYMENT_CHOICES = (
     ('S','Stripe'),
@@ -73,6 +79,7 @@ class PaymentForm(forms.Form):
 
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from allauth.account.forms import SignupForm 
 
 # Sign Up Form
 class MyCustomSignupForm(UserCreationForm):
@@ -90,6 +97,24 @@ class MyCustomSignupForm(UserCreationForm):
             'password1', 
             'password2', 
             ]
+    def clean(self,*args,**kwargs):
+        email=self.cleaned_data.get('email')
+        #is_valid = validate_email(email,verify=True)
+        #print(is_valid)
+        email_qs=User.objects.filter(email=email)
+        if email_qs.exists():
+            raise forms.ValidationError("Email address is already registered")
+        
+        EMAIL_REGEX = re.compile(r"^[A-Za-z0-9_\.]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$")  
+           #^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$
+           #[^@\s]+@[^@\s]+\.[a-zA-Z0-9]+$
+        try:
+            if not EMAIL_REGEX.match(email):
+                raise forms.ValidationError("Sorry,Invalid email address")
+        except:
+            raise forms.ValidationError("Sorry,Invalid email address")
+        return super(MyCustomSignupForm,self).clean(*args,**kwargs)
+    
 
 class ReviewForm(ModelForm):  ##error can be here####
     class Meta:
