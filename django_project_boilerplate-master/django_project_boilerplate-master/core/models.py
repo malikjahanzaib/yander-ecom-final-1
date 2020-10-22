@@ -303,7 +303,7 @@ class Review(models.Model):
     item = models.ForeignKey(Item,on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,on_delete=models.CASCADE)
 
-    subject = models.CharField(max_length=50,blank=True)
+    subject = models.CharField(max_length=50,null=True,blank=True)
     comment = models.CharField(max_length=250,blank=True)
     rate = models.IntegerField(default=1,null=True, blank=True)
     ip = models.CharField(max_length=20,blank=True)  #user ip

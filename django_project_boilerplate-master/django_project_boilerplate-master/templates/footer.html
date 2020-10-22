@@ -50,7 +50,7 @@
           <h6>Quick links</h6>
           <ul>
             <li><a href="{% url 'core:home' %}">Home</a></li>
-            <li><a href="shop-all">Shop All</a></li>
+            <li><a href="{% url 'core:shop-all' %}">Shop All</a></li>
             <li><a href="{% url 'core:clothing' %}">Clothing</a></li>
             <li><a href="{% url 'core:decor' %}">Decor</a></li>
             <li><a href="{% url 'core:foods' %}">Organic Foods</a></li>
@@ -72,19 +72,19 @@
       <div class="col-lg-4 col-md-8 col-sm-8">
         <div class="footer__newslatter">
           <h6 class="text-center">REFUND REQUEST</h6>
-          <form action="#" class="">
+         <!---- <form action="#" class=""> -->
             <button
               type="submit"
               class="site-btn"
               style="position: relative; margin-left: 90px"
             >
               <a href="{% url 'core:request-refund' %}" style="color: white"
-                >Ask for refund</a
-              >
+                >Ask for refund</a>
+              
             </button>
             <br />
             <br />
-          </form>
+         <!---- </form> -->
           <div class="footer__social text-center">
             <a href="https://www.facebook.com/zarak.mohammad/"
               ><i class="fa fa-facebook"></i

@@ -26,6 +26,7 @@ from django.core.mail import mail_admins
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import HttpRequest
+from django.contrib.auth.models import User
 #------------------------------------------------------------
 # from django.core.mail import EmailMultiAlternatives
 from django.core import mail
@@ -82,7 +83,7 @@ class ItemDetailView(DetailView):
    # this function overrides the built in context function in detailsView
     def get_context_data(self, **kwargs):
        context =super().get_context_data(**kwargs)
-       context['reviews'] = Review.objects.filter(item_id = self.object,status='True')
+       context['reviews'] = Review.objects.filter(item_id = self.object,status=True)
        return context
     
 
@@ -751,13 +752,18 @@ class RequestRefundView(View):
                     messages.info(self.request,"Your request is really important to us, We will work on it ASAP!")
                     msg = EmailMessage('We are working on your request,Please be patient!', 'yander.helpdesk@gmail.com', to=[self.request.user.email])
                     msg.send()
-                    admin_msg = Email
+                    admin_msg = EmailMessage('New refund request','We have a new refund request, check Admin.', 'yander.helpdesk@gmail.com', to=['zarak.shahjee1@gmail.com','jahanzaibmlk321@gmail.com'])
+                    admin_msg.send()
                     return redirect("core:request-refund")
 
                 
                 except ObjectDoesNotExist:
                     messages.info(self.request,"This Order Does Not Exist")
                     return redirect("core:request-refund")
+                except ValueError:
+                    messages.info(self.request,"This Order Does Not Exist")
+                    return redirect("core:request-refund")
+
             else:
                 messages.info(self.request,"Please give a registered email.")
                 return redirect("core:request-refund")
