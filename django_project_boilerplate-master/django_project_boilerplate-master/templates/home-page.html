@@ -108,7 +108,9 @@
             data-setbg="{{ item.image.url }}"
             data-link="{{ item.get_absolute_url }}"
           >
+           {% if item.label %}
             <div class="label new">New</div>
+            {% endif %}
             <ul class="product__hover">
               <li>
                 <a href="{{ item.image.url }}" class="image-popup"

@@ -7,6 +7,17 @@ def make_refund_accepted(modeladmin,request,queryset):
 
 make_refund_accepted.short_description ='Update orders to refund granted'
 
+def make_review_accepted(modeladmin,request,queryset):
+    queryset.update(status=True)
+
+make_review_accepted.short_description = "Update Reviews to be posted(True)"
+
+def make_review_declined(modeladmin,request,queryset):
+    queryset.update(status=False)
+
+make_review_declined.short_description = "Update Reviews not to be posted(False)"
+
+
 def make_received(modeladmin,request,queryset):
     queryset.update(being_delivered=False,received=True)
 
@@ -36,7 +47,11 @@ class ReviewAdmin(admin.ModelAdmin):
 
     list_filter =['status']
 
+    search_fields=['user__username','status']
+
     readonly_fields =['subject','comment','ip','user','rate','item']
+
+    actions =[make_review_accepted,make_review_declined]
     
 # Register your models here.
 #registers our models on the admin pg
